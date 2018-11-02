@@ -1,6 +1,4 @@
 require "net/http/tracer/version"
-require "net/http"
-require "uri"
 
 module Net
   module Http
