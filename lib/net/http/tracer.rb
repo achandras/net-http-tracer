@@ -1,7 +1,9 @@
 require "net/http/tracer/version"
+require "net/http"
+require "uri"
 
 module Net
-  module HTTP
+  module Http
     module Tracer
 
       class << self
@@ -10,10 +12,10 @@ module Net
 
         def instrument
           begin
-            @tracer_url = URI.parse(ENV['TRACER_INGEST_URL'])
+            @tracer_url = ::URI.parse(ENV['TRACER_INGEST_URL'])
           rescue
             puts "Tracer ingest URL not provided"
-            @tracer_url = URI.new
+            @tracer_url = ::URI.parse("http://localhost:14268/api/traces")
           end
 
           patch_request
@@ -59,9 +61,9 @@ module Net
             # Compare path, address, and port
             def ingest_path?(req)
               
-              return "#{Tracer.tracer_url.path}?#{Tracer.tracer_url.query}" == req.path && # this should short circuit in most cases
-                Tracer.tracer_url.host == @address &&
-                Tracer.tracer_url.port == @port
+              return "#{::Net::Http::Tracer.tracer_url.path}?#{::Net::Http::Tracer.tracer_url.query}" == req.path && # this should short circuit in most cases
+                ::Net::Http::Tracer.tracer_url.host == @address &&
+                ::Net::Http::Tracer.tracer_url.port == @port
             end
           end
         end
