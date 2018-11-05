@@ -9,18 +9,21 @@ module Net
         attr_reader :tracer_url
 
         def instrument(tracer_url: nil)
+          tracer_str = ''
           if tracer_url.nil?
             # if the tracer url wasn't given, try to fall back to an env var
             # or a default
             begin
-              @tracer_url = ::URI.parse(ENV['TRACER_INGEST_URL'])
+              tracer_str = ENV['TRACER_INGEST_URL']
             rescue
               puts "Tracer ingest URL not provided"
-              @tracer_url = ::URI.parse("http://localhost:14268/api/traces")
+              tracer_str = "http://localhost:14268/api/traces"
             end
           else
-            @tracer_url = tracer_url
+            tracer_str = tracer_url
           end
+
+          @tracer_url = URI.parse(tracer_str)
 
           patch_request
         end
