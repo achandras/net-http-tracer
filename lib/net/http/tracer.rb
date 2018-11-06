@@ -36,7 +36,7 @@ module Net
             def request(req, body = nil, &block)
               res = ''
 
-              if ingest_path?(req)
+              if req.key? 'opentracing-ignore'
                 # this is probably a request to export spans, so we should ignore it
                 res = request_original(req, body, &block)
               else
@@ -62,15 +62,6 @@ module Net
               end
 
               res
-            end
-
-            # Make a best effort to see if this is going out to the ingest url
-            # Compare path, address, and port
-            def ingest_path?(req)
-              
-              return "#{::Net::Http::Tracer.tracer_url.path}?#{::Net::Http::Tracer.tracer_url.query}" == req.path && # this should short circuit in most cases
-                ::Net::Http::Tracer.tracer_url.host == @address &&
-                ::Net::Http::Tracer.tracer_url.port == @port
             end
           end
         end
