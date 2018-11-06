@@ -20,15 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-Set an OpenTracing-compatible tracer, such as ['jaeger-client'](https://github.com/salemove/jaeger-client-ruby), as the global tracer.
-
-Export an environment variable, `TRACER_INGEST_URL`, with the Jaeger span ingest URL. The tracer will ignore outgoing requests to this URL when tracing requests.
-
-```bash
-export TRACER_INGEST_URL='https://localhost:14268/api/traces'
-```
-
-If no URL is specified, the one above is used as the default.
+Set an OpenTracing-compatible tracer, such as ['jaeger-client'](https://github.com/signalfx/jaeger-client-ruby), as the global tracer.
 
 Before making any requests, configure the tracer:
 
@@ -48,7 +40,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/achandras/net-http-tracer.
+Bug reports and pull requests are welcome on GitHub at https://github.com/signalfx/net-http-tracer.
 
 ## License
 
