@@ -10,6 +10,13 @@ module Net
           patch_request
         end
 
+        def tracer_request?
+          for location in caller_locations
+            return true if location.label == 'send_spans'
+          end
+          return false
+        end
+
         def patch_request
 
           ::Net::HTTP.module_eval do
@@ -18,7 +25,7 @@ module Net
             def request(req, body = nil, &block)
               res = ''
 
-              if req.key? 'opentracing-ignore'
+              if ::Net::Http::Tracer.tracer_request?
                 # this is probably a request to export spans, so we should ignore it
                 res = request_original(req, body, &block)
               else
