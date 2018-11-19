@@ -37,7 +37,7 @@ module Net
                   "peer.host" => @address,
                   "peer.port" => @port,
                 }
-                OpenTracing.global_tracer.start_active_span("net_http.request", tags: tags) do |scope|
+                OpenTracing.global_tracer.start_active_span(req.path, tags: tags) do |scope|
                   # inject the trace so it's available to the remote service
                   OpenTracing.inject(scope.span.context, OpenTracing::FORMAT_RACK, req)
 
