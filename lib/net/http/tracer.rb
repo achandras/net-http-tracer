@@ -7,7 +7,11 @@ module Net
 
       class << self
 
-        def instrument
+        attr_accessor :ignore_request
+
+        def instrument(ignore_request: nil)
+          @ignore_request = ignore_request
+
           patch_request
         end
 
@@ -19,8 +23,9 @@ module Net
             def request(req, body = nil, &block)
               res = ''
 
-              if Thread.current.thread_variable_get(:tracer_reporter)
-                # this is from the thread to send spans, so we should ignore it
+              if ::Net::Http::Tracer.ignore_request.respond_to?(:call) &&
+                 ::Net::Http::Tracer.ignore_request.call
+
                 res = request_original(req, body, &block)
               else
                 tags = {
